@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  api:
+    labels:
+      traefik.docker.network: "web"
+      traefik.frontend.rule: "Host: api.${DOMAIN}"
+    networks:
+      - web
+      - default
+
+  frontend:
+    labels:
+      traefik.docker.network: "web"
+      traefik.http.routers.frontend.rule: "Host: ${DOMAIN}"
+    networks:
+      - web
+      - default
+
+  backend:
+    labels:
+      traefik.docker.network: "web"
+      traefik.frontend.rule: "Host: backend.${DOMAIN}"
+    networks:
+      - web
+      - default
+
+networks:
+  web:
+    external: true

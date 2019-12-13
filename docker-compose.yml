@@ -1,0 +1,107 @@
+version: '3'
+
+services:
+  php:
+    image: yiisoftware/yii2-php:7.1-fpm
+    working_dir: /app
+    volumes:
+      - ~/.composer-docker/cache:/var/www/.composer/cache:delegated
+      - ./:/app:delegated
+      - ./docker/php/docker-php-entrypoint:/usr/local/bin/docker-php-entrypoint
+      - ./docker/php/.bashrc:/var/www/.bashrc
+    environment:
+      PHP_USER_ID: ${PHP_USER_ID}
+    depends_on:
+      - db
+      - mailcatcher
+    restart: ${RESTART}
+
+  api:
+    image: nginx:1.15-alpine
+    volumes:
+      - ./docker/api/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/app:delegated
+    depends_on:
+      - php
+    restart: ${RESTART}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:api.${DOMAIN}"
+    networks:
+      - default
+      - web
+
+  backend:
+    image: nginx:1.15-alpine
+    volumes:
+      - ./docker/backend/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/app:delegated
+    depends_on:
+      - php
+    restart: ${RESTART}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:backend.${DOMAIN}"
+    networks:
+      - default
+      - web
+
+  frontend:
+    image: nginx:1.15-alpine
+    volumes:
+      - ./docker/frontend/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/app:delegated
+    depends_on:
+      - php
+    restart: ${RESTART}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:${DOMAIN}"
+    networks:
+      - default
+      - web
+
+
+  mailcatcher:
+    image: schickling/mailcatcher:latest
+    restart: ${RESTART}
+    labels:
+      traefik.enable: "true"
+      traefik.port: "1080"
+      traefik.frontend.rule: "Host:mail.${DOMAIN}"
+    networks:
+      - default
+      - web
+
+  db:
+    image: postgres:10.5-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./docker/db/initdb.d:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:${DOCKER_DB_PORT}:5432
+    restart: ${RESTART}
+
+  php-worker:
+    image: yiisoftware/yii2-php:7.1-fpm
+    working_dir: /app
+    volumes:
+      - ~/.composer-docker/cache:/var/www/.composer/cache:delegated
+      - ./:/app:delegated
+      - ./docker/php/docker-php-entrypoint:/usr/local/bin/docker-php-entrypoint
+    command: /usr/local/bin/php /app/yii queue/listen
+    environment:
+      PHP_USER_ID: ${PHP_USER_ID}
+    depends_on:
+      - db
+      - mailcatcher
+    restart: ${RESTART}
+
+volumes:
+  db_data:
+
+networks:
+  web:
+    external: true
