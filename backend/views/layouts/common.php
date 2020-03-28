@@ -147,6 +147,27 @@ $bundle = BackendAsset::register($this);
                         'visible' => Yii::$app->user->can('administrator'),
                     ],
                     [
+                        'label' => Yii::t('backend', 'Category'),
+                        'icon' => '<i class="fa fa-category"></i>',
+                        'url' => ['/category/index'],
+                        'active' => (Yii::$app->controller->id === 'category'),
+                        'visible' => Yii::$app->user->can('administrator'),
+                    ],
+                    [
+                        'label' => Yii::t('backend', 'Tag'),
+                        'icon' => '<i class="fa fa-tag"></i>',
+                        'url' => ['/tag/index'],
+                        'active' => (Yii::$app->controller->id === 'tag'),
+                        'visible' => Yii::$app->user->can('administrator'),
+                    ],
+                    [
+                        'label' => Yii::t('backend', 'Product'),
+                        'icon' => '<i class="fa fa-product"></i>',
+                        'url' => ['/product/index'],
+                        'active' => (Yii::$app->controller->id === 'product'),
+                        'visible' => Yii::$app->user->can('administrator'),
+                    ],
+                    [
                         'label' => Yii::t('backend', 'System'),
                         'options' => ['class' => 'header'],
                     ],
