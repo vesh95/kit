@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\Category;
+use common\models\Tag;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
@@ -24,6 +25,10 @@ use common\models\Category;
         ArrayHelper::map(Category::find()->all(), 'id', 'title')
     );
     ?>
+
+    <?php echo $form->field($model, 'tags')->checkboxList(
+        ArrayHelper::map(Tag::find()->all(), 'id', 'title')
+    ); ?>
 
     <div class="form-group">
         <?php echo Html::submitButton($model->isNewRecord ? Yii::t('backend', 'Create') : Yii::t('backend', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

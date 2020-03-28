@@ -68,4 +68,10 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ProductTag::className(), ['product_id' => 'id']);
     }
+
+    public function getTags()
+    {
+        return $this->hasMany(Tag::className(), ['id' => 'tag_id'])
+            ->viaTable('product_tag', ['product_id' => 'id']);
+    }
 }
