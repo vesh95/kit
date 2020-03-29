@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use common\models\Category;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\ProductSearch */
@@ -29,7 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description',
-            'category_id',
+            [
+                'attribute' => 'category_id',
+                'filter' => ArrayHelper::map(Category::find()->all(), 'id', 'title'),
+                'value' => 'category.title'
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
