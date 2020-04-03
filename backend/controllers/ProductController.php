@@ -4,10 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Product;
+use common\models\ProductTag;
+use common\models\Tag;
 use backend\models\search\ProductSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -65,6 +68,15 @@ class ProductController extends Controller
         $model = new Product();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            foreach ($model->tag_ids as $tagId) {
+                $tagModel = Tag::findOne($tagId);
+
+                if ($tagModel) {
+                    $model->link('tags', $tagModel);
+                }
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -83,7 +95,20 @@ class ProductController extends Controller
     {
         $model = $this->findModel($id);
 
+        $model->tag_ids = ArrayHelper::getColumn($model->tags, 'id');
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            ProductTag::deleteAll(['product_id' => $model->id]);
+
+            foreach ($model->tag_ids as $tagId) {
+                $tagModel = Tag::findOne($tagId);
+
+                if ($tagModel) {
+                    $model->link('tags', $tagModel);
+                }
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -101,6 +126,8 @@ class ProductController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        ProductTag::deleteAll(['product_id' => $id]);
 
         return $this->redirect(['index']);
     }

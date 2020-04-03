@@ -17,6 +17,8 @@ use Yii;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    public $tag_ids;
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +39,7 @@ class Product extends \yii\db\ActiveRecord
             [['title'], 'string', 'max' => 32],
             [['description'], 'string', 'max' => 255],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['tag_ids'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -47,9 +50,10 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
-            'description' => 'Description',
-            'category_id' => 'Category ID',
+            'title' => Yii::t('backend', 'Title'),
+            'description' => Yii::t('backend', 'Description'),
+            'category_id' => Yii::t('backend', 'Category'),
+            'tags' => Yii::t('backend', 'Tags'),
         ];
     }
 

@@ -41,7 +41,7 @@ class Tag extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
+            'title' => Yii::t('backend', 'Title'),
         ];
     }
 

@@ -165,5 +165,10 @@ return [
     'i18n Message' => 'Перевод',
     'i18n Source Message' => 'Текст',
     'Product' => 'Товар',
+    'Product ID' => 'Идентификатор товара',
     'Products' => 'Товары',
+    'Tags' => 'Теги',
+    'Description' => 'Описание',
+    'Title' => 'Название',
+    'Categories' => 'Категории',
 ];

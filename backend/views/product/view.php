@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
@@ -29,7 +30,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description',
-            'category_id',
+            [
+                'attribute' => 'category_id',
+                'value' => function ($model) {
+                    return $model->category ? $model->category->title : null;
+                }
+            ],
+            [
+                'attribute' => 'tags',
+                'value' => function ($model) {
+                    return $model->tags ? join(', ', ArrayHelper::getColumn($model->tags, 'title')) : null;
+                }
+            ]
         ],
     ]) ?>
 
