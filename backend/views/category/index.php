@@ -18,7 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php echo Html::a(Yii::t('backend', 'Create {modelClass}', [
     'modelClass' => 'Category',
 ]), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php echo Html::a(Yii::t('backend', 'Importing {modelClass}', [
+        'modelClass' => 'Category',
+      ]), ['import'], ['class' => 'btn btn-success']) ?>
     </p>
+
 
     <?php echo GridView::widget([
         'dataProvider' => $dataProvider,

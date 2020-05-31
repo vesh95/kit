@@ -40,6 +40,7 @@ return [
     'Count' => 'Количество',
     'Create' => 'Создать',
     'Create {modelClass}' => 'Создание {modelClass}',
+    'Importing {modelClass}' => 'Импорт {modelClass}',
     'DB Type' => 'Тип БД',
     'DB Version' => 'Версия БД',
     'Date' => 'Дата',
@@ -171,4 +172,6 @@ return [
     'Description' => 'Описание',
     'Title' => 'Название',
     'Categories' => 'Категории',
+    'Import' => 'Импротировать',
+    'Import {modelClass} results' => 'Импортировано в {modelClass}',
 ];
