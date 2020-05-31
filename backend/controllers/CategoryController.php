@@ -8,6 +8,8 @@ use backend\models\search\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use backend\models\CategoryCsvForm;
+use yii\web\UploadedFile;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -103,6 +105,20 @@ class CategoryController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionImport()
+    {
+        $model = new CategoryCsvForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->csvFile = UploadedFile::getInstance($model, 'csvFile');
+            if ($model->import()) {
+                return $this->render('importResults', ['model' => $model]);
+            }
+        }
+
+        return $this->render('import', ['model' => $model]);
     }
 
     /**
